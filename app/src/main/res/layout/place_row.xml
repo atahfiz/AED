@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:paddingLeft="16dp"
+    android:paddingTop="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/placeID"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="30dp"
+        android:layout_centerInParent="true"
+        android:layout_toLeftOf="@+id/placeDistance"
+        android:id="@+id/relativeLayout">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Hospital Name"
+            android:id="@+id/placeName"
+            android:singleLine="true"
+            android:textColor="#000"
+            android:textIsSelectable="false"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Time"
+            android:id="@+id/placeTime"
+            android:layout_below="@+id/placeName"
+            android:singleLine="true"
+            android:textColor="#2689e0"
+            android:textIsSelectable="false"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/placeDistance"
+        android:layout_marginRight="8dp"
+        android:textSize="15sp"
+        android:text="Distance"
+        android:layout_alignTop="@+id/placeImage"
+        android:layout_toStartOf="@+id/placeImage" />
+
+    <ImageView
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:id="@+id/placeImage"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/hospital_icon"
+        android:scaleType="centerInside"
+        android:layout_alignBottom="@+id/relativeLayout"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>
