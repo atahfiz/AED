@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- settings dropdown item -->
+    <string-array name="age_categories">
+        <item>Below 18 years old</item>
+        <item>18 to 25 years old</item>
+        <item>26 to 35 years old</item>
+        <item>36 to 45 years old</item>
+        <item>Above 46 years old</item>
+    </string-array>
+    <string-array name="category_values">
+        <item>Below 18 years old</item>
+        <item>18 to 25 years old</item>
+        <item>26 to 35 years old</item>
+        <item>36 to 45 years old</item>
+        <item>Above 46 years old</item>
+    </string-array>
+
+    <!-- navigation item -->
+    <string-array name="nav_drawer_items">
+        <item>Home</item>
+        <item>Contacts</item>
+        <item>Nearby</item>
+        <item>Settings</item>
+        <!--<item>Fifth</item>
+        <item>Sixth</item> -->
+    </string-array>
+
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_home</item>
+        <item>@drawable/ic_contacts</item>
+        <item>@drawable/ic_location_searching</item>
+        <item>@drawable/ic_settings</item>
+        <!--<item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        -->
+
+    </array>
+</resources>
