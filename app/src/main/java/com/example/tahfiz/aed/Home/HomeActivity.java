@@ -107,6 +107,10 @@ public class HomeActivity extends BaseActivity implements AdapterView.OnItemClic
             case R.id.menu_stop:
                 scanLeDevice(false);
                 break;
+
+            case android.R.id.home:
+                NavDrawerToggle();
+                break;
         }
         return true;
     }

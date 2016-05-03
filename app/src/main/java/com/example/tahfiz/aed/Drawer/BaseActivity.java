@@ -131,14 +131,18 @@ public class BaseActivity extends AppCompatActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		if (item.getItemId() == android.R.id.home) {
-			if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-				mDrawerLayout.closeDrawer(mDrawerList);
-			} else {
-				mDrawerLayout.openDrawer(mDrawerList);
-			}
+			NavDrawerToggle();
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	public void NavDrawerToggle(){
+		if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+			mDrawerLayout.closeDrawer(mDrawerList);
+		} else {
+			mDrawerLayout.openDrawer(mDrawerList);
+		}
 	}
 
 	/***
