@@ -1,6 +1,5 @@
 package com.example.tahfiz.aed.Settings;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -48,7 +47,6 @@ public class SettingsActivity extends BaseActivity {
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
         }
-        initActionBar();
     }
 
     @Override
@@ -118,15 +116,6 @@ public class SettingsActivity extends BaseActivity {
                 settings.load();
             }
         };
-    }
-
-    private void initActionBar() {
-        ActionBar actionBar = getActionBar();
-
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 }
 
