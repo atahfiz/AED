@@ -37,12 +37,10 @@ import android.widget.TextView;
 
 import com.example.tahfiz.aed.R;
 
-import com.movisens.smartgattlib.Characteristic;
-import com.movisens.smartgattlib.Service;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * For a given BLE device, this Activity provides the user interface to connect, display data,
@@ -173,11 +171,6 @@ public class DeviceControlActivity extends Activity {
         mConnectionState = (TextView) findViewById(R.id.connection_state);
         mDataField = (TextView) findViewById(R.id.data_value);
 
-        if (getActionBar() != null){
-            getActionBar().setTitle(mDeviceName);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
@@ -264,7 +257,19 @@ public class DeviceControlActivity extends Activity {
 
         // Loops through available GATT Services.
         for (BluetoothGattService gattService : gattServices) {
-            HashMap<String, String> currentServiceData = new HashMap<String, String>();
+            List<BluetoothGattCharacteristic> gattCharacteristics =
+                    gattService.getCharacteristics();
+
+            // Loops through available Characteristics.
+            for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
+
+
+                if (UUID.fromString("00002a37-0000-1000-8000-00805f9b34fb").equals(gattCharacteristic.getUuid())){
+                    mBluetoothLeService.setCharacteristicNotification(gattCharacteristic,true);
+                }
+            }
+        }
+           /* HashMap<String, String> currentServiceData = new HashMap<String, String>();
             currentServiceData.put(
                     LIST_NAME, Service.lookup(gattService.getUuid(), unknownServiceString));
             currentServiceData.put(LIST_UUID, uuid);
@@ -300,9 +305,9 @@ public class DeviceControlActivity extends Activity {
                 gattCharacteristicData,
                 android.R.layout.simple_expandable_list_item_2,
                 new String[] {LIST_NAME, LIST_UUID},
-                new int[] { android.R.id.text1, android.R.id.text2 }
-        );
-        mGattServicesList.setAdapter(gattServiceAdapter);
+                new int[] { android.R.id.text1, android.R.id.text2 }*/
+        /*);
+        mGattServicesList.setAdapter(gattServiceAdapter);*/
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
