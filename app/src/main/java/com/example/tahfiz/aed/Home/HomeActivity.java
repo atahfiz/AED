@@ -1,22 +1,27 @@
 package com.example.tahfiz.aed.Home;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,13 +31,16 @@ import com.example.tahfiz.aed.R;
 
 import java.util.ArrayList;
 
-public class HomeActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class HomeActivity extends BaseActivity /*implements AdapterView.OnItemClickListener*/ {
+
+    private static final String TAG =HomeActivity.class.getSimpleName() ;
 
     private String[] navMenuTitles;
     private TypedArray navMenuIcons;
 
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothLeService mBluetoothLeService;
     private boolean mScanning;
     private Handler mHandler;
 
@@ -40,11 +48,13 @@ public class HomeActivity extends BaseActivity implements AdapterView.OnItemClic
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 10000;
     private ListView lvDevice;
+    private ArrayAdapter<String> BTArrayAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items); // load
         // titles
         // from
@@ -55,8 +65,6 @@ public class HomeActivity extends BaseActivity implements AdapterView.OnItemClic
         // strings.xml
 
         set(navMenuTitles, navMenuIcons);
-
-        lvDevice = (ListView) findViewById(R.id.list_device);
 
         mHandler = new Handler();
 
@@ -129,11 +137,113 @@ public class HomeActivity extends BaseActivity implements AdapterView.OnItemClic
         }
 
         // Initializes list view adapter.
+        /*mLeDeviceListAdapter = new LeDeviceListAdapter();
+        setListAdapter(mLeDeviceListAdapter);
+        scanLeDevice(true);*/
+    }
+
+    //Pop up Dialog for bluetooth list
+    private void showBTDialog() {
+        final LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View ViewLayout = inflater.inflate(R.layout.bt_list, (ViewGroup) findViewById(R.id.bt_list));
+
+        final AlertDialog popDialog = new AlertDialog.Builder(this)
+                .setView(ViewLayout)
+                .setTitle("List of Available Devices")
+                .setPositiveButton("Scan",null)
+                .setNegativeButton("Stop",null)
+                .create();
+
+        //Create View for BTDevices
+        lvDevice = (ListView) ViewLayout.findViewById(android.R.id.list);
+        lvDevice.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
+                if (device == null) return;
+                final Intent intent = new Intent(HomeActivity.this, DeviceControlActivity.class);
+                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
+                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+                if (mScanning) {
+                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    mScanning = false;
+                }
+                popDialog.dismiss();
+                startActivity(intent);
+            }
+        });
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         lvDevice.setAdapter(mLeDeviceListAdapter);
-        lvDevice.setOnItemClickListener(this);
-        scanLeDevice(true);
+
+        popDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+
+                if (!mScanning) {
+                    Log.d(TAG, "Scan Button enabled");
+                    popDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                    popDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(false);
+                } else {
+                    Log.d(TAG, "Stop Button enabled");
+                    popDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                    popDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(true);
+                }
+
+                Button btnScan = ((AlertDialog) popDialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                btnScan.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mLeDeviceListAdapter.clear();
+                        scanLeDevice(true);
+                        popDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                        popDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(true);
+                    }
+                });
+
+                Button btnStop = ((AlertDialog) popDialog).getButton(DialogInterface.BUTTON_NEGATIVE);
+                btnStop.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        scanLeDevice(false);
+                        popDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                        popDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(false);
+                    }
+                });
+            }
+        });
+
+        popDialog.show();
+
+        /*Button btnScan = (Button) ViewLayout.findViewById(R.id.btn_scan);
+        Button btnStop = (Button) ViewLayout.findViewById(R.id.btn_stop);
+
+        btnScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLeDeviceListAdapter.clear();
+                scanLeDevice(true);
+            }
+        });
+
+        btnStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanLeDevice(false);
+            }
+        });
+
+        AlertDialog dialog = popDialog.create();
+        dialog.show();
+
+        if (!mScanning) {
+            btnStop.setVisibility(View.GONE);
+            btnScan.setVisibility(View.VISIBLE);
+        } else {
+            btnStop.setVisibility(View.VISIBLE);
+            btnScan.setVisibility(View.GONE);
+        }*/
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -142,15 +252,30 @@ public class HomeActivity extends BaseActivity implements AdapterView.OnItemClic
             finish();
             return;
         }
+        showBTDialog();
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        scanLeDevice(false);
-        mLeDeviceListAdapter.clear();
+        /*scanLeDevice(false);
+        mLeDeviceListAdapter.clear();*/
     }
+
+   /* @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
+        if (device == null) return;
+        final Intent intent = new Intent(this, DeviceControlActivity.class);
+        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
+        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+        if (mScanning) {
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            mScanning = false;
+        }
+        startActivity(intent);
+    }*/
 
     private void scanLeDevice(final boolean enable) {
         if (enable) {
@@ -171,20 +296,6 @@ public class HomeActivity extends BaseActivity implements AdapterView.OnItemClic
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
         }
         invalidateOptionsMenu();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
-        if (device == null) return;
-        final Intent intent = new Intent(this, DeviceControlActivity.class);
-        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
-        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-        if (mScanning) {
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-            mScanning = false;
-        }
-        startActivity(intent);
     }
 
     // Adapter for holding devices found through scanning.
