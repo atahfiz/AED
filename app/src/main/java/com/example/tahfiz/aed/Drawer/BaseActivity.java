@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.example.tahfiz.aed.Contacts.ContactActivity;
+import com.example.tahfiz.aed.Graph.GraphActivity;
 import com.example.tahfiz.aed.Home.HomeActivity;
 import com.example.tahfiz.aed.Nearby.NearbyActivity;
 import com.example.tahfiz.aed.R;
@@ -89,7 +90,7 @@ public class BaseActivity extends AppCompatActivity {
 		// getSupportActionBar().setIcon(R.drawable.ic_drawer);
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.ic_drawer, // nav menu toggle icon
+				toolbar, // nav menu toggle icon
 				R.string.app_name, // nav drawer open - description for
 				// accessibility
 				R.string.app_name // nav drawer close - description for
@@ -174,23 +175,24 @@ public class BaseActivity extends AppCompatActivity {
 			finish();// finishes the current activity
 			break;
 
-		 case 2:
+		case 2:
 			Intent intent2 = new Intent(this, NearbyActivity.class);
 			startActivity(intent2);
 			finish();
 			break;
 
 		case 3:
+			Intent intent4 = new Intent(this, GraphActivity.class);
+			startActivity(intent4);
+			finish();
+			break;
+
+		case 4:
             SettingsActivity.startThisActivityForResult(this,SETTING_REQUEST);
 		// Intent intent3 = new Intent(this, fourth.class);
 		// startActivity(intent3);
 		    finish();
 		    break;
-		// case 4:
-		// Intent intent4 = new Intent(this, fifth.class);
-		// startActivity(intent4);
-		// finish();
-		// break;
 		// case 5:
 		// Intent intent5 = new Intent(this, sixth.class);
 		// startActivity(intent5);

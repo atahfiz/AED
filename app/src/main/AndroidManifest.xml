@@ -18,16 +18,17 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Permission for using Bluetooth in Home module -->
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Permission for using SmsManager in Notification module -->
+    <uses-permission android:name="android.permission.SEND_SMS"/>
 
     <application
+        android:name=".Settings.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/MyMaterialTheme"
-        android:name=".Settings.MyApplication">
+        android:theme="@style/MyMaterialTheme" >
         <activity
             android:name=".Home.HomeActivity"
             android:label="@string/app_name" >
@@ -37,12 +38,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Home.DeviceControlActivity">
-        </activity>
+
         <service
-            android:name=".Home.BluetoothLeService"
+            android:name=".AlarmService"
             android:enabled="true"/>
+
+        <receiver android:name=".AlarmIntentReceiver"/>
+
+        <activity android:name=".Home.DeviceControlActivity"/>
+        <service android:name=".Home.BluetoothLeService" android:enabled="true"/>
 
         <activity
             android:name=".Contacts.ContactActivity"
@@ -61,6 +65,10 @@
         <activity
             android:name=".Settings.SettingsActivity"
             android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name=".Graph.GraphActivity"
+            android:label="@string/title_activity_graph" >
         </activity>
     </application>
 

@@ -25,11 +25,17 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_PLACENAME = "name";
     public static final String KEY_DISTANCE= "distance";
     public static final String KEY_DURATION = "time";
-    public static final String KEY_LATITUDE = "latitude";
-    public static final String KEY_LONGITUDE= "longitude";
+
+    //Label for Graph Database
+    public static final String GRAPH_TABLE = "Graph";
+    public static final String KEY_DATAID = "_id";
+    public static final String KEY_DATE = "date";
+    public static final String KEY_AVERAGE = "average";
+    public static final String KEY_HIGHEST= "highest";
+    public static final String KEY_LOWEST = "lowest";
 
     //Database Name
-    private static final String DATABASE_NAME = "Contact.db";
+    private static final String DATABASE_NAME = "AidApp.db";
 
     public DBHelper(Context context){
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
@@ -50,11 +56,18 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_PLACENAME + " TEXT,"
                 + KEY_DURATION + " DOUBLE,"
                 + KEY_DISTANCE + " TEXT )";
-               // + KEY_LATITUDE + " TEXT,"
-                //+ KEY_LONGITUDE + " TEXT )";
+
+        // Create Graph Table
+        String CREATE_TABLE_GRAPH = "CREATE TABLE " + GRAPH_TABLE + "("
+                + KEY_DATAID + " INTEGER PRIMARY KEY,"
+                + KEY_DATE + " TEXT,"
+                + KEY_AVERAGE + " INTEGER,"
+                + KEY_HIGHEST + " INTEGER,"
+                + KEY_LOWEST + " INTEGER )";
 
         db.execSQL(CREATE_TABLE_CONTACT);
         db.execSQL(CREATE_TABLE_NEARBY);
+        db.execSQL(CREATE_TABLE_GRAPH);
     }
 
     @Override
@@ -62,6 +75,7 @@ public class DBHelper extends SQLiteOpenHelper {
         //Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + CONTACT_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + NEARBY_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + GRAPH_TABLE);
 
         //Create table again
         onCreate(db);

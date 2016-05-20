@@ -22,6 +22,7 @@
         <item>Home</item>
         <item>Contacts</item>
         <item>Nearby</item>
+        <item>Graph Activity</item>
         <item>Settings</item>
         <!--<item>Fifth</item>
         <item>Sixth</item> -->
@@ -31,6 +32,7 @@
         <item>@drawable/ic_home</item>
         <item>@drawable/ic_contacts</item>
         <item>@drawable/ic_location_searching</item>
+        <item>@drawable/ic_action_bargraph</item>
         <item>@drawable/ic_settings</item>
         <!--<item>@drawable/ic_launcher</item>
         <item>@drawable/ic_launcher</item>
