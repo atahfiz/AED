@@ -134,7 +134,7 @@ public class BluetoothLeService extends Service {
             // Characteristic
             HeartRateMeasurement hrm = new HeartRateMeasurement(data); // Interpret
             // Characteristic
-            intent.putExtra(EXTRA_DATA, "HR: " + hrm.getHr() + "bpm" );
+            intent.putExtra(EXTRA_DATA, String.valueOf(hrm.getHr()));
             Log.d("BluetoothLeService", "HR: " + hrm.getHr() + " bpm");
         } else if (Characteristic.BODY_SENSOR_LOCATION
                 .equals(characteristicUuid)) {

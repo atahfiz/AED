@@ -54,12 +54,6 @@
                     android:textSize="18sp"/>
             </LinearLayout>
 
-            <Button
-                android:id="@+id/sendSMS_button"
-                android:text="SEND"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
             <ListView
                 android:id="@+id/list_device"
                 android:layout_width="fill_parent"

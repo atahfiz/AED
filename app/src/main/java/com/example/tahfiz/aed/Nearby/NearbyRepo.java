@@ -58,6 +58,7 @@ public class NearbyRepo {
         }
     }
 
+    //Delete all existing data
     private void deleteAll() {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -90,6 +91,17 @@ public class NearbyRepo {
         return null;
     }
 
+    public int getNearbyCount(){
+        String countQuery = "SELECT * FROM " + DBHelper.NEARBY_TABLE;
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(countQuery,null);
+
+        return cursor.getCount();
+    }
+
+    //Retrieve all Nearby Places
     public ArrayList<PlaceData> getPlaceList(){
 
         //Open connection to read only

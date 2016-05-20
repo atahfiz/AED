@@ -16,7 +16,6 @@
 
 package com.example.tahfiz.aed.Home;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
@@ -25,6 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -34,6 +34,7 @@ import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
+import com.example.tahfiz.aed.Drawer.BaseActivity;
 import com.example.tahfiz.aed.R;
 
 import java.util.ArrayList;
@@ -47,11 +48,14 @@ import java.util.UUID;
  * communicates with {@code BluetoothLeService}, which in turn interacts with the
  * Bluetooth LE API.
  */
-public class DeviceControlActivity extends Activity {
+public class DeviceControlActivity extends BaseActivity {
     private final static String TAG = DeviceControlActivity.class.getSimpleName();
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
+
+    private String[] navMenuTitles;
+    private TypedArray navMenuIcons;
 
     private TextView mConnectionState;
     private TextView mDataField;
@@ -159,6 +163,17 @@ public class DeviceControlActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gatt_services_characteristics);
 
+        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items); // load
+        // titles
+        // from
+        // strings.xml
+
+        navMenuIcons = getResources()
+                .obtainTypedArray(R.array.nav_drawer_icons);// load icons from
+        // strings.xml
+
+        set(navMenuTitles, navMenuIcons);
+
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
@@ -220,7 +235,7 @@ public class DeviceControlActivity extends Activity {
                 mBluetoothLeService.disconnect();
                 return true;
             case android.R.id.home:
-                onBackPressed();
+                NavDrawerToggle();
                 return true;
         }
         return super.onOptionsItemSelected(item);
