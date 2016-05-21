@@ -9,6 +9,12 @@
         android:dialogTitle="Enter Your Name"/>
 
     <ListPreference
+        android:key="category_sex"
+        android:title="Sex"
+        android:entryValues="@array/categorySex_values"
+        android:entries="@array/sex_categories"/>
+
+    <ListPreference
         android:key="category_age"
         android:title="Your Age"
         android:summary="Select Your Age"

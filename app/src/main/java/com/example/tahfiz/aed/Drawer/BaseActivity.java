@@ -20,7 +20,6 @@ import com.example.tahfiz.aed.Graph.GraphActivity;
 import com.example.tahfiz.aed.Home.HomeActivity;
 import com.example.tahfiz.aed.Nearby.NearbyActivity;
 import com.example.tahfiz.aed.R;
-import com.example.tahfiz.aed.Settings.AppSettings;
 import com.example.tahfiz.aed.Settings.SettingsActivity;
 
 import java.util.ArrayList;
@@ -188,10 +187,10 @@ public class BaseActivity extends AppCompatActivity {
 			break;
 
 		case 4:
-            SettingsActivity.startThisActivityForResult(this,SETTING_REQUEST);
-		// Intent intent3 = new Intent(this, fourth.class);
-		// startActivity(intent3);
-		    finish();
+            SettingsActivity.startThisActivityForResult(this, SETTING_REQUEST);
+			/*Intent intent3 = new Intent(this, SettingsActivity.class);
+			startActivity(intent3);
+		    finish();*/
 		    break;
 		// case 5:
 		// Intent intent5 = new Intent(this, sixth.class);
@@ -218,16 +217,13 @@ public class BaseActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case SETTING_REQUEST:
-                fillViews();
+				HomeActivity.fillView();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void fillViews() {
-        AppSettings settings = AppSettings.getSettings(this);
-    }
 
-    /**
+	/**
 	 * When using the ActionBarDrawerToggle, you must call it during
 	 * onPostCreate() and onConfigurationChanged()...
 	 */

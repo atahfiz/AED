@@ -3,18 +3,27 @@
 
     <!-- settings dropdown item -->
     <string-array name="age_categories">
-        <item>Below 18 years old</item>
         <item>18 to 25 years old</item>
         <item>26 to 35 years old</item>
         <item>36 to 45 years old</item>
-        <item>Above 46 years old</item>
+        <item>46 to 55 years old</item>
+        <item>56 to 65 years old</item>
     </string-array>
     <string-array name="category_values">
-        <item>Below 18 years old</item>
         <item>18 to 25 years old</item>
         <item>26 to 35 years old</item>
         <item>36 to 45 years old</item>
-        <item>Above 46 years old</item>
+        <item>46 to 55 years old</item>
+        <item>56 to 65 years old</item>
+    </string-array>
+
+    <string-array name="sex_categories">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string-array name="categorySex_values">
+        <item>Male</item>
+        <item>Female</item>
     </string-array>
 
     <!-- navigation item -->

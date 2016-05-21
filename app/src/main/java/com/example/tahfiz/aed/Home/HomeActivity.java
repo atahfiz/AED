@@ -40,6 +40,7 @@ import com.example.tahfiz.aed.Drawer.BaseActivity;
 import com.example.tahfiz.aed.Nearby.NearbyActivity;
 import com.example.tahfiz.aed.Nearby.NearbyRepo;
 import com.example.tahfiz.aed.R;
+import com.example.tahfiz.aed.Settings.AppSettings;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,6 +50,8 @@ import java.util.UUID;
 public class HomeActivity extends BaseActivity {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
+    private static int MAX = 85;
+    private static int MIN = 49;
 
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
@@ -75,8 +78,8 @@ public class HomeActivity extends BaseActivity {
     private int deviceIndex = 0;
     private BluetoothDevice mDevices = null;
     private NearbyRepo nearbyRepo;
-    private TextView dataVal;
-
+    private static TextView dataVal;
+    private static HomeActivity actvContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +97,8 @@ public class HomeActivity extends BaseActivity {
 
         set(navMenuTitles, navMenuIcons);
 
+        actvContext = this;
+
         contactRepo = new ContactRepo(this);
         nearbyRepo = new NearbyRepo(this);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -102,6 +107,7 @@ public class HomeActivity extends BaseActivity {
 
         connectionState = (TextView) findViewById(R.id.connection_state);
         dataVal = (TextView) findViewById(R.id.data_value);
+        fillView();
 
         mHandler = new Handler();
 
@@ -172,9 +178,26 @@ public class HomeActivity extends BaseActivity {
             case android.R.id.home:
                 NavDrawerToggle();
                 break;
-
         }
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        SharedPreferences prefs = getSharedPreferences("AidPrefs",MODE_PRIVATE);
+
+        //First time the application runs
+        /*if (!prefs.getBoolean("splash_shown",false)){
+            Intent firstRun = new Intent(HomeActivity.this, GuideActivity.class);
+            startActivity(firstRun);
+
+            SharedPreferences.Editor editor = prefs.edit();
+
+            editor.putBoolean("splash_shown",true);
+            editor.commit();
+        }*/
     }
 
     @Override
@@ -211,8 +234,6 @@ public class HomeActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         scanLeDevice(false);
-
-        //mLeDeviceListAdapter.clear();
     }
 
     @Override
@@ -282,6 +303,94 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
+    //Retrieve data from SettingsActivity
+    public static void fillView() {
+        AppSettings settings = AppSettings.getSettings(actvContext);
+        switch (settings.getCategorySex()){
+            case "Male":
+                limitHeartBeatForMen(settings.getCategoryAge());
+                break;
+
+            case "Female":
+                limitHeartBeatForWomen(settings.getCategoryAge());
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    //Resting heart rate for women
+    private static void limitHeartBeatForWomen(String categoryAge) {
+        switch (categoryAge){
+            case "18 to 25 years old":
+                MIN = 61;
+                MAX = 85;
+                break;
+
+            case "26 to 35 years old":
+                MIN = 60;
+                MAX = 83;
+                break;
+
+            case "36 to 45 years old":
+                MIN = 60;
+                MAX = 85;
+                break;
+
+            case "46 to 55 years old":
+                MIN = 61;
+                MAX = 84;
+                break;
+
+            case "56 to 65 years old":
+                MIN = 60;
+                MAX = 82;
+                break;
+
+            default:
+                MIN = 49;
+                MAX = 85;
+                break;
+        }
+    }
+
+    //Resting heart rate for men
+    private static void limitHeartBeatForMen(String categoryAge) {
+        switch (categoryAge){
+            case "18 to 25 years old":
+                MIN = 56;
+                MAX = 82;
+                break;
+
+            case "26 to 35 years old":
+                MIN = 55;
+                MAX = 82;
+                break;
+
+            case "36 to 45 years old":
+                MIN = 57;
+                MAX = 83;
+                break;
+
+            case "46 to 55 years old":
+                MIN = 58;
+                MAX = 84;
+                break;
+
+            case "56 to 65 years old":
+                MIN = 57;
+                MAX = 82;
+                break;
+
+            default:
+                MIN = 49;
+                MAX = 85;
+                break;
+        }
+    }
+
+
     /**
      * Dialog to display a list of bonded Bluetooth devices for user to select from.  This is
      * needed only for channel connection initiated from the application.
@@ -295,6 +404,7 @@ public class HomeActivity extends BaseActivity {
             frag.setArguments(args);
             return frag;
         }
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             String[] deviceNames = getArguments().getStringArray("names");
@@ -315,6 +425,7 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
+    //Broadcast the sentReciver
     private static final BroadcastReceiver smsSentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -499,19 +610,21 @@ public class HomeActivity extends BaseActivity {
         });
     }
 
+    // Display and Check the Hearbeat
     private void displayData(String data) {
+
         if (data != null) {
             dataVal.setText(data);
+            /*int hbData = Integer.parseInt(data);
 
-            int hbData = Integer.parseInt(data);
-
-            if (hbData > 10 && hbData < 120){
+            if ((hbData > 10 && hbData < MIN) || hbData > MAX){
+                Log.e(TAG,"Triggered data: " + hbData + "bpm");
                 mBluetoothLeService.disconnect();
                 if (contactRepo.getContactsCount() > 0 && nearbyRepo.getNearbyCount() > 0){
                     respond();
                     fireAlarm();
                 }
-            }
+            }*/
         }
     }
 
@@ -523,7 +636,6 @@ public class HomeActivity extends BaseActivity {
         for (BluetoothGattService gattService : gattServices) {
             List<BluetoothGattCharacteristic> gattCharacteristics =
                     gattService.getCharacteristics();
-
             // Loops through available Characteristics.
             for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
                 if (UUID.fromString("00002a37-0000-1000-8000-00805f9b34fb").equals(gattCharacteristic.getUuid())) {

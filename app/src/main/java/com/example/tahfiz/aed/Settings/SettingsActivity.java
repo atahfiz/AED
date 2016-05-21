@@ -6,9 +6,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.design.widget.AppBarLayout;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.Toolbar;
 
 import com.example.tahfiz.aed.Drawer.BaseActivity;
 import com.example.tahfiz.aed.R;
@@ -26,6 +32,26 @@ public class SettingsActivity extends BaseActivity {
     public static void startThisActivityForResult(Activity activity, int requestCode) {
         Intent intent = new Intent(activity, SettingsActivity.class);
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    public void onPostCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
+
+        AppBarLayout bar;
+
+        LinearLayout root = (LinearLayout)findViewById(android.R.id.list).getParent().getParent().getParent();
+        bar = (AppBarLayout) LayoutInflater.from(this).inflate(R.layout.app_bar,root,false);
+        root.addView(bar,0);
+
+        Toolbar toolbar = (Toolbar) bar.getChildAt(0);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavDrawerToggle();
+            }
+        });
     }
 
     @Override
@@ -84,6 +110,15 @@ public class SettingsActivity extends BaseActivity {
                     return true;
                 }
             });
+
+            Preference categorySexPrefs = findPreference("category_sex");
+            categorySexPrefs.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    preference.setSummary(String.valueOf(newValue));
+                    return true;
+                }
+            });
         }
 
         @Override
@@ -96,6 +131,9 @@ public class SettingsActivity extends BaseActivity {
 
             Preference categoryAgePrefs = findPreference("category_age");
             categoryAgePrefs.setSummary(settings.getCategoryAge());
+
+            Preference categorySexPrefs = findPreference("category_sex");
+            categorySexPrefs.setSummary(settings.getCategorySex());
         }
 
         @Override

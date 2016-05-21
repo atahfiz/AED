@@ -8,11 +8,10 @@ public class Settings {
 	private static final String USERNAME_KEY = "username";
 	private static final String CATEGORY_AGE_KEY = "category_age";
 	private static final String SWITCH_KEY = "switch";
+	private static final String CATEGORY_SEX_KEY = "category_sex";
 
 	private boolean enableBackground;
 	private String username;
-	private String categoryAge;
-	private boolean switchValue;
 
 	public boolean isEnableBackground() {
 		return enableBackground;
@@ -38,6 +37,14 @@ public class Settings {
 		this.categoryAge = categoryAge;
 	}
 
+	public String getCategorySex() {
+		return categorySex;
+	}
+
+	public void setCategorySex(String categorySex) {
+		this.categorySex = categorySex;
+	}
+
 	public boolean isSwitchValue() {
 		return switchValue;
 	}
@@ -46,10 +53,15 @@ public class Settings {
 		this.switchValue = switchValue;
 	}
 
+	private String categoryAge;
+	private String categorySex;
+	private boolean switchValue;
+
 	public void load(SharedPreferences prefs) {
 		enableBackground = prefs.getBoolean(ENABLE_BACKGROUND_KEY, false);
 		username = prefs.getString(USERNAME_KEY, "John Doe");
 		categoryAge = prefs.getString(CATEGORY_AGE_KEY, null);
+		categorySex = prefs.getString(CATEGORY_SEX_KEY,null);
 		switchValue = prefs.getBoolean(SWITCH_KEY, false);
 	}
 
@@ -69,6 +81,7 @@ public class Settings {
 		editor.putBoolean(ENABLE_BACKGROUND_KEY, enableBackground);
 		editor.putString(USERNAME_KEY, username);
 		editor.putString(CATEGORY_AGE_KEY, categoryAge);
+		editor.putString(CATEGORY_SEX_KEY, categorySex);
 		editor.putBoolean(SWITCH_KEY, switchValue);
 	}
 }

@@ -36,31 +36,12 @@
                     android:text="@string/disconnected"
                     android:textSize="18sp"/>
             </LinearLayout>
-
-            <LinearLayout android:orientation="horizontal"
+            <TextView android:id="@+id/data_value"
+                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp">
-                <TextView android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_data"
-                    android:textSize="18sp"/>
-                <Space android:layout_width="5dp"
-                    android:layout_height="wrap_content"/>
-                <TextView android:id="@+id/data_value"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_data"
-                    android:textSize="18sp"/>
-            </LinearLayout>
-
-            <ListView
-                android:id="@+id/list_device"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/display_data"
-                android:divider="#b5b5b5"
-                android:dividerHeight="1dp"/>
+                android:text="@string/no_data"
+                android:textSize="18sp"/>
         </LinearLayout>
     </FrameLayout>
 

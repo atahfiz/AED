@@ -21,7 +21,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <!-- Permission for using SmsManager in Notification module -->
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:name=".Settings.MyApplication"
@@ -41,12 +41,15 @@
 
         <service
             android:name=".AlarmService"
-            android:enabled="true"/>
+            android:enabled="true" />
 
-        <receiver android:name=".AlarmIntentReceiver"/>
+        <receiver android:name=".AlarmIntentReceiver" />
 
-        <activity android:name=".Home.DeviceControlActivity"/>
-        <service android:name=".Home.BluetoothLeService" android:enabled="true"/>
+        <activity android:name=".Home.DeviceControlActivity" />
+
+        <service
+            android:name=".Home.BluetoothLeService"
+            android:enabled="true" />
 
         <activity
             android:name=".Contacts.ContactActivity"
@@ -69,6 +72,10 @@
         <activity
             android:name=".Graph.GraphActivity"
             android:label="@string/title_activity_graph" >
+        </activity>
+        <activity
+            android:name=".GuideActivity"
+            android:label="@string/title_activity_guide" >
         </activity>
     </application>
 
